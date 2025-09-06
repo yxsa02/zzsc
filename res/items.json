@@ -1,0 +1,173 @@
+{
+  "items": {
+    "food": {
+      "canned_food": {
+        "name": "罐头食品",
+        "description": "一个过期的罐头食品，但还能吃。",
+        "weight": 0.5,
+        "nutrition": 25,
+        "health_effect": 0,
+        "durability": 1,
+        "stackable": true,
+        "max_stack": 10,
+        "value": 5
+      },
+      "fresh_fruit": {
+        "name": "新鲜水果",
+        "description": "罕见的新鲜水果，能提供维生素。",
+        "weight": 0.3,
+        "nutrition": 15,
+        "health_effect": 5,
+        "durability": 3,
+        "stackable": true,
+        "max_stack": 5,
+        "value": 8
+      }
+    },
+    "water": {
+      "bottled_water": {
+        "name": "瓶装水",
+        "description": "干净的饮用水，生存必需品。",
+        "weight": 0.5,
+        "hydration": 30,
+        "health_effect": 0,
+        "durability": 1,
+        "stackable": true,
+        "max_stack": 5,
+        "value": 4
+      },
+      "dirty_water": {
+        "name": "污水",
+        "description": "未经处理的水，饮用可能生病。",
+        "weight": 0.5,
+        "hydration": 20,
+        "health_effect": -10,
+        "durability": 1,
+        "stackable": true,
+        "max_stack": 5,
+        "value": 1
+      }
+    },
+    "medical": {
+      "bandage": {
+        "name": "绷带",
+        "description": "基本医疗用品，可以止血。",
+        "weight": 0.2,
+        "health_effect": 15,
+        "durability": 1,
+        "stackable": true,
+        "max_stack": 10,
+        "value": 8
+      },
+      "antiseptic": {
+        "name": "消毒剂",
+        "description": "防止伤口感染。",
+        "weight": 0.3,
+        "health_effect": 10,
+        "durability": 3,
+        "stackable": true,
+        "max_stack": 5,
+        "value": 12
+      }
+    },
+    "materials": {
+      "scrap_metal": {
+        "name": "废金属",
+        "description":可用于制作工具和武器。",
+        "weight": 1.0,
+        "durability": 10,
+        "stackable": true,
+        "max_stack": 20,
+        "value": 3
+      },
+      "wood": {
+        "name": "木材",
+        "description": "可用于建造和燃料。",
+        "weight": 0.8,
+        "durability": 5,
+        "stackable": true,
+        "max_stack": 15,
+        "value": 2
+      }
+    },
+    "tools": {
+      "knife": {
+        "name": "小刀",
+        "description": "基本工具，可用于切割和自卫。",
+        "weight": 0.7,
+        "damage": 10,
+        "durability": 50,
+        "stackable": false,
+        "value": 15
+      },
+      "flashlight": {
+        "name": "手电筒",
+        "description": "提供光源，需要电池。",
+        "weight": 0.6,
+        "durability": 100,
+        "battery_required": true,
+        "stackable": false,
+        "value": 12
+      }
+    },
+    "weapons": {
+      "pistol": {
+        "name": "手枪",
+        "description": "轻型 firearm，需要弹药。",
+        "weight": 1.2,
+        "damage": 30,
+        "durability": 75,
+        "ammo_type": "9mm",
+        "stackable": false,
+        "value": 40
+      },
+      "baseball_bat": {
+        "name": "棒球棒",
+        "description": "可靠的近战武器。",
+        "weight": 1.5,
+        "damage": 15,
+        "durability": 40,
+        "stackable": false,
+        "value": 10
+      }
+    },
+    "ammo": {
+      "9mm": {
+        "name": "9mm 弹药",
+        "description": "用于手枪的弹药。",
+        "weight": 0.1,
+        "stackable": true,
+        "max_stack": 30,
+        "value": 1
+      }
+    }
+  },
+  "crafting_recipes": {
+    "purified_water": {
+      "name": "净化水",
+      "description": "将污水净化成饮用水。",
+      "requirements": {
+        "dirty_water": 1,
+        "scrap_metal": 1
+      },
+      "results": {
+        "bottled_water": 1
+      },
+      "time": 2,
+      "skill_required": "basic"
+    },
+    "wooden_spear": {
+      "name": "木矛",
+      "description": "简单的狩猎武器。",
+      "requirements": {
+        "wood": 2,
+        "scrap_metal": 1
+      },
+      "results": {
+        "wooden_spear": 1
+      },
+      "time": 4,
+      "skill_required": "basic"
+    }
+  }
+}
