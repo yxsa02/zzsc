@@ -88,6 +88,15 @@
         "stackable": true,
         "max_stack": 15,
         "value": 2
+      },
+      "cloth": {
+        "name": "布料",
+        "description": "可用于制作衣物和绷带。",
+        "weight": 0.3,
+        "durability": 5,
+        "stackable": true,
+        "max_stack": 15,
+        "value": 2
       }
     },
     "tools": {
@@ -167,6 +176,18 @@
         "wooden_spear": 1
       },
       "time": 4,
+      "skill_required": "basic"
+    },
+    "bandage": {
+      "name": "绷带",
+      "description": "用布料制作的基本医疗用品。",
+      "requirements": {
+        "cloth": 2
+      },
+      "results": {
+        "bandage": 1
+      },
+      "time": 1,
       "skill_required": "basic"
     }
   }
