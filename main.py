@@ -22,10 +22,10 @@ while True:
                 game_loop.start(world_data, inventory)
                 
     elif bootopt == "new":
-        while True:
-            nwn = "New World"
+        nwn = "New World"
+        while True:         
             nwopt = memu.memu_newworld(nwn, "")
-            
+                    
             if nwopt == "back":
                 break
                 

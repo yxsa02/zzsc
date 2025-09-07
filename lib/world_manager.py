@@ -1,9 +1,10 @@
 # lib/world_manager.py
+# lib/world_manager.py
 import os
 import json
 import time
 from datetime import datetime
-from .item_system import ItemManager, InventoryManager
+from .item_system import ItemManager, InventoryManager, Inventory  # 确保 Inventory 被导入
 
 class WorldManager:
     def __init__(self):
