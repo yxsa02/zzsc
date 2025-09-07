@@ -73,7 +73,7 @@
     "materials": {
       "scrap_metal": {
         "name": "废金属",
-        "description":可用于制作工具和武器。",
+        "description": "可用于制作工具和武器。",
         "weight": 1.0,
         "durability": 10,
         "stackable": true,

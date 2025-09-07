@@ -1,6 +1,7 @@
 import os
 import sys
 import platform
+import signal
 from wcwidth import wcswidth
 
 def get_terminal_size():
@@ -8,6 +9,7 @@ def get_terminal_size():
     try:
         # 尝试使用标准方法
         columns, rows = os.get_terminal_size()
+        return columns, rows
     except (AttributeError, OSError):
         try:
             # Windows 系统
@@ -21,17 +23,16 @@ def get_terminal_size():
                     (_, _, _, _, _, left, top, right, bottom, _, _) = struct.unpack("hhhhHhhhhhh", csbi.raw)
                     columns = right - left + 1
                     rows = bottom - top + 1
-                else:
-                    columns, rows = 80, 24  # 默认值
+                    return columns, rows
             else:
                 # Unix/Linux/Mac
                 rows, columns = os.popen('stty size 2>/dev/null').read().split()
-                columns, rows = int(columns), int(rows)
+                return int(columns), int(rows)
         except:
-            # 如果所有方法都失败，使用默认值
-            columns, rows = 80, 24
+            pass
     
-    return columns, rows
+    # 如果所有方法都失败，使用默认值
+    return 80, 24
 
 class AdaptiveDisplayBoard:
     def __init__(self, title="window", min_width=45, max_width=None):
@@ -42,16 +43,20 @@ class AdaptiveDisplayBoard:
         self.left_ratio = 0.7  # 左侧区域占总宽度的比例
         self.right_ratio = 0.3  # 右侧区域占总宽度的比例
         
+        # 存储终端大小
+        self.terminal_width, self.terminal_height = get_terminal_size()
+        
+        # 注册终端大小改变信号处理
+        if platform.system() != "Windows":
+            signal.signal(signal.SIGWINCH, self._handle_resize)
+    
+    def _handle_resize(self, signum, frame):
+        """处理终端大小改变信号"""
+        self.terminal_width, self.terminal_height = get_terminal_size()
+    
     def _get_display_width(self, text):
         """计算字符串的显示宽度"""
-        width = 0
-        for char in text:
-            # 中文字符通常占用2个英文字符宽度
-            if '\u4e00' <= char <= '\u9fff':
-                width += 2
-            else:
-                width += 1
-        return width
+        return wcswidth(text)
     
     def _truncate_text(self, text, max_width, ellipsis="…"):
         """截断文本并添加省略号"""
@@ -66,7 +71,7 @@ class AdaptiveDisplayBoard:
         current_width = 0
         
         for char in text:
-            char_width = 2 if '\u4e00' <= char <= '\u9fff' else 1
+            char_width = wcswidth(char)
             if current_width + char_width > max_content_width:
                 break
             result += char
@@ -76,20 +81,21 @@ class AdaptiveDisplayBoard:
     
     def display(self):
         """显示内容，自适应终端大小"""
-        # 获取终端大小
-        columns, rows = get_terminal_size()
+        # 使用缓存的终端大小
+        width = self.terminal_width
         
         # 确定显示板宽度
         if self.max_width:
-            width = min(columns, self.max_width)
-        else:
-            width = columns
+            width = min(width, self.max_width)
         
         width = max(width, self.min_width)  # 确保不小于最小宽度
         
-        # 计算左右区域宽度
-        left_width = int((width - 3) * self.left_ratio)  # -3 是为了边框和分隔符
-        right_width = int((width - 3) * self.right_ratio)
+        # 计算左右区域宽度（考虑边框和分隔符）
+        # 总宽度 = 左边框(1) + 左侧内容 + 分隔符(1) + 右侧内容 + 右边框(1)
+        # 所以可用内容宽度 = 总宽度 - 3
+        content_width = width - 3
+        left_width = int(content_width * self.left_ratio)
+        right_width = content_width - left_width  # 确保总宽度正确
         
         # 清屏
         os.system("cls" if platform.system() == "Windows" else "clear")
@@ -116,7 +122,7 @@ class AdaptiveDisplayBoard:
             left_padding = left_width - left_display_width
             right_padding = right_width - right_display_width
             
-            # 创建格式化字符串
+            # 创建格式化字符串，确保等号对齐
             line = f"={left_display}{' ' * left_padding}={right_display}{' ' * right_padding}="
             print(line)
         
@@ -134,3 +140,7 @@ class AdaptiveDisplayBoard:
     def set_title(self, title):
         """设置标题"""
         self.title = title
+    
+    def update_terminal_size(self):
+        """手动更新终端大小"""
+        self.terminal_width, self.terminal_height = get_terminal_size()
