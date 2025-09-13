@@ -1,7 +1,7 @@
 # main.py
-from lib import memu
-from lib.world_manager import WorldManager
-from lib.game_loop import GameLoop
+import lib.memu as memu
+from lib.world import WorldManager
+from lib.loop import GameLoop
 
 world_manager = WorldManager()
 game_loop = GameLoop(world_manager)
@@ -30,7 +30,7 @@ while True:
                 break
                 
             elif nwopt == "edit":
-                nwn = input("输入世界名: ")
+                nwn = memu.memu_edit_world_name(nwn)
                 
             elif isinstance(nwopt, str) and nwopt.startswith("world_"):
                 # 新世界创建成功，进入游戏

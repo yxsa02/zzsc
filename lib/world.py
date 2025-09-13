@@ -1,10 +1,9 @@
 # lib/world_manager.py
-# lib/world_manager.py
 import os
 import json
 import time
 from datetime import datetime
-from .item_system import ItemManager, InventoryManager, Inventory  # 确保 Inventory 被导入
+from .item import ItemManager, InventoryManager, Inventory  # 确保 Inventory 被导入
 
 class WorldManager:
     def __init__(self):
@@ -129,7 +128,11 @@ class WorldManager:
         # 保存库存
         inventory_manager.save_inventory(inventory)
         
-        # 更新元数据
+        # 更新元数据 - 首先将所有世界的 is_active 设为 False
+        for wid in worlds:
+            worlds[wid]["is_active"] = False
+        
+        # 然后将新创建的世界设为活跃
         worlds[world_id] = {
             "name": world_name,
             "created": datetime.now().isoformat(),
@@ -137,7 +140,7 @@ class WorldManager:
             "days_survived": 1,
             "player_name": player_name,
             "difficulty": difficulty,
-            "is_active": True,
+            "is_active": True,  # 只有这个新世界是活跃的
             "inventory": {
                 "capacity": inventory.capacity,
                 "current_weight": inventory.get_total_weight(),
@@ -162,8 +165,11 @@ class WorldManager:
             inventory_manager = InventoryManager(world_id, self.item_manager)
             inventory = inventory_manager.load_inventory()
             
-            # 更新元数据中的最后游玩时间
+            # 更新元数据中的最后游玩时间，并将所有世界的is_active设为False，当前世界设为True
             meta_data = self.load_meta_data()
+            for wid in meta_data["worlds"]:
+                meta_data["worlds"][wid]["is_active"] = (wid == world_id)
+                
             if world_id in meta_data["worlds"]:
                 meta_data["worlds"][world_id]["last_played"] = datetime.now().isoformat()
                 meta_data["worlds"][world_id]["days_survived"] = world_data["player"]["day"]
